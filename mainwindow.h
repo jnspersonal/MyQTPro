@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QMovie>
 #include <QIcon>
+#include <QPixmap>
+#include <QScreen>
 
 namespace Ui {
 class MainWindow;
@@ -22,10 +24,13 @@ private slots:
 
     void on_ChangeButton_clicked();
 
+    void on_GrabAllButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QMovie *pMainWinTitleMov;
     QIcon  *pMainWinTitleicon;
+    QPixmap GrabPixMap;
 
 private:
     void initMainWin();
