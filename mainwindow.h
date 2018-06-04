@@ -2,10 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QApplication>
 #include <QMovie>
 #include <QIcon>
 #include <QPixmap>
 #include <QScreen>
+#include <QTextStream>
+#include <QFile>
+#include <QTime>
+#include <QTimer>
+
+#define MAINWINDOW_DELAY_BY_PROCESSEVENTS 1
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +33,8 @@ private slots:
 
     void on_GrabAllButton_clicked();
 
+    void on_GrabClearButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QMovie *pMainWinTitleMov;
@@ -34,6 +43,7 @@ private:
 
 private:
     void initMainWin();
+    void mySleep(unsigned int msec);
 };
 
 #endif // MAINWINDOW_H

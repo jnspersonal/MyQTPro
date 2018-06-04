@@ -11,6 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     this->initMainWin();
+//    QFile file("./styles/default.qss");
+//    file.open(QFile::ReadOnly);
+//    QString styleSheet = file.readAll();//QLatin1String(file.readAll());
+//    a.setStyleSheet(styleSheet);
+    ui->TabWidget->setCurrentIndex(0);
 }
 
 MainWindow::~MainWindow()
@@ -42,6 +47,17 @@ void MainWindow::initMainWin()
     this->setWindowTitle("RawDeep");
 }
 
+void MainWindow::mySleep(unsigned int msec)
+{
+    //currentTime返回当前时间，加上需要延时的时间，到达演示msec时间的效果
+    QTime reachTime = QTime::currentTime().addMSecs(msec);
+
+    while (QTime::currentTime() < reachTime)
+    {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    }
+}
+
 void MainWindow::on_ChangeButton_clicked()
 {
 
@@ -49,22 +65,25 @@ void MainWindow::on_ChangeButton_clicked()
 
 void MainWindow::on_GrabAllButton_clicked()
 {
+    this->hide();
+
+#ifdef MAINWINDOW_DELAY_BY_QTIMER
+    QTimer timer = new QTimer(this);
+    timer->start(200 + timeComBox->value() * 1000);
+#elif MAINWINDOW_DELAY_BY_PROCESSEVENTS
+    mySleep(200);
+#endif
     QScreen *screen = QGuiApplication::primaryScreen();
-    GrabPixMap = screen->grabWindow(QApplication::activeWindow()->winId(), -2, -26,
-                                      QApplication::activeWindow()->width() + 4,
-                                      QApplication::activeWindow()->height() + 30);
+    GrabPixMap = screen->grabWindow(0);
 
-//    qDebug() << "Grab pixmap";
-//    QLabel *pGrabShowLable = new QLabel();
-
-//    pGrabShowLable->resize(QSize(800,480));
-//    pGrabShowLable->move(90, 10);
-//    pGrabShowLable->clear();
-//    pGrabShowLable->setStyleSheet("background-color:red");
-//    pGrabShowLable->setText(QString("hello"));
-//    pGrabShowLable->setPixmap(GrabPixMap);
-
-    ui->GrabShowLabel->resize(QSize(800,480));
-    ui->GrabShowLabel->setStyleSheet("background-color:red");
+    GrabPixMap.scaled(QSize(400,400), Qt::KeepAspectRatio);
+    //ui->GrabShowLabel->resize(QSize(800,480));
+    ui->GrabShowLabel->setStyleSheet("background-color:black");
     ui->GrabShowLabel->setPixmap(GrabPixMap);
+    this->show();
+}
+
+void MainWindow::on_GrabClearButton_clicked()
+{
+    ui->GrabShowLabel->clear();
 }
